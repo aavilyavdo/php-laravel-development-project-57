@@ -45,4 +45,40 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+      /**
+     * Получить все тексты пользователя
+     * Связь один-ко-многим
+     */
+    public function texts()
+    {
+        return $this->hasMany(Text::class);
+    }
+
+    /**
+     * Получить только опубликованные тексты пользователя
+     */
+    public function publishedTexts()
+    {
+        return $this->hasMany(Text::class)->published();
+    }
+
+    /**
+     * Тексты, которые пользователь добавил в избранное
+     * Связь многие-ко-многим
+     */
+    public function favoriteTexts()
+    {
+        return $this->belongsToMany(Text::class, 'favorites', 'user_id', 'text_id')
+                    ->withTimestamps()
+                    ->withPivot('created_at');
+    }
+
+    /**
+     * Проверка, является ли пользователь автором текста
+     */
+    public function isAuthorOf(Text $text): bool
+    {
+        return $this->id === $text->user_id;
+    }
+}
 }
