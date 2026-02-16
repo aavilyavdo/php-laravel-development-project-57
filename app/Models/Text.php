@@ -59,3 +59,7 @@ class Text extends Model
         'views' => 0,
     ];
 }
+  public function author()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
